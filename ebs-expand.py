@@ -336,6 +336,39 @@ class AWS:
             logger.error(e, exc_info=True)
             sys.exit(1)
 
+    def cleanup(self, old_vol_id, snap_id):
+        while True:
+            try:
+                choice = str(input(
+                    'Do you want to remove the old volume and snapshot? [Y/N] '
+                    ).lower())
+
+                if choice == 'y':
+                    # Remove old volume
+                    logger.info('Removing old EBS volume ({})...'
+                                .format(old_vol_id))
+                    self.ec2.delete_volume(
+                        VolumeId=old_vol_id
+                    )
+                    logger.info('{} has been removed.'.format(old_vol_id))
+
+                    # Remove snapshot
+                    logger.info('Removing snapshot ({0}) of {1}...'
+                                .format(snap_id, old_vol_id))
+                    self.ec2.delete_snapshot(
+                        SnapshotId=snap_id
+                    )
+                    logger.info('{} has been removed.'.format(snap_id))
+
+                    break
+                elif choice == 'n':
+                    break
+                else:
+                    logger.error('Please choose between Y and N.')
+            except Exception as e:
+                logger.error(e, exc_info=True)
+                sys.exit(1)
+
 
 def main():
     try:
@@ -378,6 +411,9 @@ def main():
 
         # Start instance
         aws.ec2start()
+
+        # Perform cleanup (optional)
+        aws.cleanup(old_vol_id, snap_id)
 
         logger.info('Task completed!')
         sys.exit(0)
