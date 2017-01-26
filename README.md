@@ -29,6 +29,7 @@ Expand root volume of EBS-backed Linux EC2.
                 "ec2:DescribeSnapshots",
                 "ec2:DescribeVolumes",
                 "ec2:DetachVolume",
+                "ec2:ModifyInstanceAttribute",
                 "ec2:StartInstances",
                 "ec2:StopInstances"
             ],
