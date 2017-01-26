@@ -117,45 +117,51 @@ optional arguments:
 # Example
 
 ```
-# python ebs-expand.py -r ap-southeast-1 -i i-9652b917 -s 10
-2017-Jan-26 09:14:04 AM | INFO - load - Found credentials in shared credentials file: ~/.aws/credentials
-2017-Jan-26 09:14:05 AM | INFO - main - Region: ap-southeast-1
-2017-Jan-26 09:14:05 AM | INFO - main - InstanceId: i-9652b917
-2017-Jan-26 09:14:05 AM | INFO - main - NewSize: 10 GiB
-2017-Jan-26 09:14:05 AM | INFO - getrv - Fetching root volume of i-9652b917...
-2017-Jan-26 09:14:05 AM | INFO - _new_conn - Starting new HTTPS connection (1): ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:14:05 AM | INFO - getrv - AvailabilityZone: ap-southeast-1a
-2017-Jan-26 09:14:05 AM | INFO - getrv - VolumeId: vol-07870a991d3510f3d
-2017-Jan-26 09:14:05 AM | INFO - getrv - Size: 8 GiB
-2017-Jan-26 09:14:05 AM | INFO - getrv - VolumeType: gp2
-2017-Jan-26 09:14:05 AM | INFO - getrv - Iops: 100
-2017-Jan-26 09:14:05 AM | INFO - getrv - RootDevice: /dev/xvda
-2017-Jan-26 09:14:05 AM | INFO - ec2stop - Stopping i-9652b917...
-2017-Jan-26 09:14:20 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:14:36 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:14:51 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:15:08 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:15:09 AM | INFO - ec2stop - EC2Status: stopped
-2017-Jan-26 09:15:09 AM | INFO - mksnap - Creating snapshot of vol-07870a991d3510f3d...
-2017-Jan-26 09:15:25 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:15:40 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:15:55 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:15:56 AM | INFO - mksnap - SnapshotId: snap-0864134678cd3e3b6
-2017-Jan-26 09:15:56 AM | INFO - mksnap - SnapshotStatus: completed
-2017-Jan-26 09:15:56 AM | INFO - mkvol - Creating new volume using snap-0864134678cd3e3b6...
-2017-Jan-26 09:16:11 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:16:12 AM | INFO - mkvol - NewVolumeId: vol-09d5c65852467cc83
-2017-Jan-26 09:16:12 AM | INFO - mkvol - NewVolumeStatus: available
-2017-Jan-26 09:16:12 AM | INFO - detachvol - Detaching old volume (vol-07870a991d3510f3d) from i-9652b917...
-2017-Jan-26 09:16:28 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:16:28 AM | INFO - detachvol - vol-07870a991d3510f3d is now detached.
-2017-Jan-26 09:16:28 AM | INFO - attachvol - Attaching new volume (vol-09d5c65852467cc83) to i-9652b917...
-2017-Jan-26 09:16:29 AM | INFO - attachvol - vol-09d5c65852467cc83 is now attached.
-2017-Jan-26 09:16:29 AM | INFO - modifyec2 - Enabling DeleteOnTermination on vol-09d5c65852467cc83...
-2017-Jan-26 09:16:29 AM | INFO - modifyec2 - DeleteOnTermination: True
-2017-Jan-26 09:16:44 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 09:16:45 AM | INFO - ec2start - EC2Status: running
-2017-Jan-26 09:16:45 AM | INFO - main - Task completed!
+# python ebs-expand.py -r ap-southeast-1 -i i-9652b917 -s 15
+2017-Jan-26 11:46:51 AM | INFO - load - Found credentials in shared credentials file: ~/.aws/credentials
+2017-Jan-26 11:46:51 AM | INFO - main - Region: ap-southeast-1
+2017-Jan-26 11:46:51 AM | INFO - main - InstanceId: i-9652b917
+2017-Jan-26 11:46:51 AM | INFO - main - NewSize: 15 GiB
+2017-Jan-26 11:46:51 AM | INFO - getrv - Fetching root volume of i-9652b917...
+2017-Jan-26 11:46:51 AM | INFO - _new_conn - Starting new HTTPS connection (1): ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:46:52 AM | INFO - getrv - AvailabilityZone: ap-southeast-1a
+2017-Jan-26 11:46:52 AM | INFO - getrv - VolumeId: vol-03568fa586d510b02
+2017-Jan-26 11:46:52 AM | INFO - getrv - Size: 10 GiB
+2017-Jan-26 11:46:52 AM | INFO - getrv - VolumeType: gp2
+2017-Jan-26 11:46:52 AM | INFO - getrv - Iops: 100
+2017-Jan-26 11:46:52 AM | INFO - getrv - RootDevice: /dev/xvda
+2017-Jan-26 11:46:52 AM | INFO - ec2stop - Stopping i-9652b917...
+2017-Jan-26 11:47:08 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:47:23 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:47:38 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:47:39 AM | INFO - ec2stop - EC2Status: stopped
+2017-Jan-26 11:47:39 AM | INFO - mksnap - Creating snapshot of vol-03568fa586d510b02...
+2017-Jan-26 11:47:54 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:48:10 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:48:25 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:48:41 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:48:41 AM | INFO - mksnap - SnapshotId: snap-0505efe80e38e1033
+2017-Jan-26 11:48:41 AM | INFO - mksnap - SnapshotStatus: completed
+2017-Jan-26 11:48:41 AM | INFO - mkvol - Creating new volume using snap-0505efe80e38e1033...
+2017-Jan-26 11:48:56 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:48:58 AM | INFO - mkvol - NewVolumeId: vol-04033e358f97ff037
+2017-Jan-26 11:48:58 AM | INFO - mkvol - NewVolumeStatus: available
+2017-Jan-26 11:48:58 AM | INFO - detachvol - Detaching old volume (vol-03568fa586d510b02) from i-9652b917...
+2017-Jan-26 11:49:13 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:49:14 AM | INFO - detachvol - vol-03568fa586d510b02 is now detached.
+2017-Jan-26 11:49:14 AM | INFO - attachvol - Attaching new volume (vol-04033e358f97ff037) to i-9652b917...
+2017-Jan-26 11:49:14 AM | INFO - attachvol - vol-04033e358f97ff037 is now attached.
+2017-Jan-26 11:49:14 AM | INFO - modifyec2 - Enabling DeleteOnTermination on vol-04033e358f97ff037...
+2017-Jan-26 11:49:14 AM | INFO - modifyec2 - DeleteOnTermination: True
+2017-Jan-26 11:49:30 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:49:30 AM | INFO - ec2start - EC2Status: running
+Do you want to remove the old volume and snapshot? [Y/N] y
+2017-Jan-26 11:49:38 AM | INFO - cleanup - Removing old EBS volume (vol-03568fa586d510b02)...
+2017-Jan-26 11:49:38 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
+2017-Jan-26 11:49:39 AM | INFO - cleanup - vol-03568fa586d510b02 has been removed.
+2017-Jan-26 11:49:39 AM | INFO - cleanup - Removing snapshot (snap-0505efe80e38e1033) of vol-03568fa586d510b02...
+2017-Jan-26 11:49:39 AM | INFO - cleanup - snap-0505efe80e38e1033 has been removed.
+2017-Jan-26 11:49:39 AM | INFO - main - Task completed!
 #
 ```
 
