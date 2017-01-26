@@ -4,7 +4,7 @@
 [![forthebadge](http://forthebadge.com/images/badges/powered-by-electricity.svg)](http://forthebadge.com)
 [![forthebadge](http://forthebadge.com/images/badges/kinda-sfw.svg)](http://forthebadge.com)
 
-Post Git commit message on user's Facebook timeline.
+Expand root volume of EBS-backed Linux EC2.
 
 # Dependencies
 
