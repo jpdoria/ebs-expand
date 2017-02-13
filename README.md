@@ -1,15 +1,11 @@
 # About
 
-[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
-[![forthebadge](http://forthebadge.com/images/badges/powered-by-electricity.svg)](http://forthebadge.com)
-[![forthebadge](http://forthebadge.com/images/badges/kinda-sfw.svg)](http://forthebadge.com)
-
 Expand root volume of EBS-backed Linux EC2.
 
 # Dependencies
 
 - [Python 3.6](https://www.python.org/downloads/)
-- [Virtualenv](https://virtualenv.pypa.io/en/stable/installation/)
+- [Pip](https://pypi.python.org/pypi/pip)
 - AWS Account - please check this [link](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration) for configuration using [AWS CLI](https://aws.amazon.com/cli/)
 - IAM Policy - please make sure you are allowed to execute the actions listed below
 
@@ -41,64 +37,17 @@ Expand root volume of EBS-backed Linux EC2.
 }
 ```
 
-# Setup
-
-- Go to any directory in your local machine
+# Installation
 
 ```
-cd ~
-```
-
-- Clone this repository
-
-```
-git clone https://github.com/jpdoria/ebs-expand.git
-```
-
-- Change directory to `ebs-expand`
-
-```
-cd ebs-expand
-```
-
-- Install `virtualenv`
-
-```
-pip install virtualenv
-```
-
-- Create a virtual environment
-
-```
-virtualenv -p python3.6 env
-```
-
-- Activate the virtual environment
-
-```
-source env/bin/activate
-```
-
-or
-
-```
-. env/bin/activate
-```
-
-- Install required modules
-
-```
-pip install -r requirements.txt
+pip install ebs-expand
 ```
 
 # Usage
 
 ```
-# python ebs-expand.py
-usage: ebs-expand.py [-h] -r REGION -i INSTANCE_ID -s SIZE
-ebs-expand.py: error: the following arguments are required: -r/--region, -i/--instance-id, -s/--size
-# python ebs-expand.py -h
-usage: ebs-expand.py [-h] -r REGION -i INSTANCE_ID -s SIZE
+# ebs_expand --help
+usage: ebs_expand [-h] -r REGION -i INSTANCE_ID -s SIZE [-v]
 
 Automate root volume expanding on Linux EBS-backed EC2 instance.
 
@@ -111,57 +60,45 @@ optional arguments:
                         Instance ID (e.g., i-1234567)
   -s SIZE, --size SIZE  Desired size for the new EBS volume in GiB (e.g., 10
                         GiB)
+  -v, --version         Display current version of ebs_expand
 #
 ```
 
 # Example
 
 ```
-# python ebs-expand.py -r ap-southeast-1 -i i-9652b917 -s 15
-2017-Jan-26 11:46:51 AM | INFO - load - Found credentials in shared credentials file: ~/.aws/credentials
-2017-Jan-26 11:46:51 AM | INFO - main - Region: ap-southeast-1
-2017-Jan-26 11:46:51 AM | INFO - main - InstanceId: i-9652b917
-2017-Jan-26 11:46:51 AM | INFO - main - NewSize: 15 GiB
-2017-Jan-26 11:46:51 AM | INFO - getrv - Fetching root volume of i-9652b917...
-2017-Jan-26 11:46:51 AM | INFO - _new_conn - Starting new HTTPS connection (1): ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:46:52 AM | INFO - getrv - AvailabilityZone: ap-southeast-1a
-2017-Jan-26 11:46:52 AM | INFO - getrv - VolumeId: vol-03568fa586d510b02
-2017-Jan-26 11:46:52 AM | INFO - getrv - Size: 10 GiB
-2017-Jan-26 11:46:52 AM | INFO - getrv - VolumeType: gp2
-2017-Jan-26 11:46:52 AM | INFO - getrv - Iops: 100
-2017-Jan-26 11:46:52 AM | INFO - getrv - RootDevice: /dev/xvda
-2017-Jan-26 11:46:52 AM | INFO - ec2stop - Stopping i-9652b917...
-2017-Jan-26 11:47:08 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:47:23 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:47:38 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:47:39 AM | INFO - ec2stop - EC2Status: stopped
-2017-Jan-26 11:47:39 AM | INFO - mksnap - Creating snapshot of vol-03568fa586d510b02...
-2017-Jan-26 11:47:54 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:48:10 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:48:25 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:48:41 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:48:41 AM | INFO - mksnap - SnapshotId: snap-0505efe80e38e1033
-2017-Jan-26 11:48:41 AM | INFO - mksnap - SnapshotStatus: completed
-2017-Jan-26 11:48:41 AM | INFO - mkvol - Creating new volume using snap-0505efe80e38e1033...
-2017-Jan-26 11:48:56 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:48:58 AM | INFO - mkvol - NewVolumeId: vol-04033e358f97ff037
-2017-Jan-26 11:48:58 AM | INFO - mkvol - NewVolumeStatus: available
-2017-Jan-26 11:48:58 AM | INFO - detachvol - Detaching old volume (vol-03568fa586d510b02) from i-9652b917...
-2017-Jan-26 11:49:13 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:49:14 AM | INFO - detachvol - vol-03568fa586d510b02 is now detached.
-2017-Jan-26 11:49:14 AM | INFO - attachvol - Attaching new volume (vol-04033e358f97ff037) to i-9652b917...
-2017-Jan-26 11:49:14 AM | INFO - attachvol - vol-04033e358f97ff037 is now attached.
-2017-Jan-26 11:49:14 AM | INFO - modifyec2 - Enabling DeleteOnTermination on vol-04033e358f97ff037...
-2017-Jan-26 11:49:14 AM | INFO - modifyec2 - DeleteOnTermination: True
-2017-Jan-26 11:49:30 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:49:30 AM | INFO - ec2start - EC2Status: running
-Do you want to remove the old volume and snapshot? [Y/N] y
-2017-Jan-26 11:49:38 AM | INFO - cleanup - Removing old EBS volume (vol-03568fa586d510b02)...
-2017-Jan-26 11:49:38 AM | INFO - _get_conn - Resetting dropped connection: ec2.ap-southeast-1.amazonaws.com
-2017-Jan-26 11:49:39 AM | INFO - cleanup - vol-03568fa586d510b02 has been removed.
-2017-Jan-26 11:49:39 AM | INFO - cleanup - Removing snapshot (snap-0505efe80e38e1033) of vol-03568fa586d510b02...
-2017-Jan-26 11:49:39 AM | INFO - cleanup - snap-0505efe80e38e1033 has been removed.
-2017-Jan-26 11:49:39 AM | INFO - main - Task completed!
+# ebs_expand -r ap-southeast-1 -i i-2f0b2aa1 -s 10
+Region: ap-southeast-1
+InstanceId: i-2f0b2aa1
+NewSize: 10 GiB
+Fetching root volume of i-2f0b2aa1...
+AvailabilityZone: ap-southeast-1a
+VolumeId: vol-60910ca6
+Size: 8 GiB
+VolumeType: gp2
+Iops: 100
+RootDevice: /dev/sda1
+Stopping i-2f0b2aa1...
+EC2Status: stopped
+Creating snapshot of vol-60910ca6...
+SnapshotId: snap-0aa2114b13d5a38f4
+SnapshotStatus: completed
+Creating new volume using snap-0aa2114b13d5a38f4...
+NewVolumeId: vol-0fd09c171ebdac8f5
+NewVolumeStatus: available
+Detaching old volume (vol-60910ca6) from i-2f0b2aa1...
+vol-60910ca6 is now detached.
+Attaching new volume (vol-0fd09c171ebdac8f5) to i-2f0b2aa1...
+vol-0fd09c171ebdac8f5 is now attached.
+Enabling DeleteOnTermination on vol-0fd09c171ebdac8f5...
+DeleteOnTermination: True
+EC2Status: running
+Do you want to remove the old volume and snapshot? [Y/N] Y
+Removing old EBS volume (vol-60910ca6)...
+vol-60910ca6 has been removed.
+Removing snapshot (snap-0aa2114b13d5a38f4) of vol-60910ca6...
+snap-0aa2114b13d5a38f4 has been removed.
+Task completed!
 #
 ```
 
