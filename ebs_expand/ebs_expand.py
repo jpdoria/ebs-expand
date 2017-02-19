@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
+import re
 import sys
+from botocore.exceptions import ClientError
 from ebs_expand.lib import Aws, set_args
 
 
@@ -32,35 +34,64 @@ def main():
               .format(old_size))
         sys.exit(1)
     elif old_size > new_size:
-        print('Old size ({}) > new size ({}). Goodbye!'
+        print('The size of a volume can only be increased, not decreased. ' +
+              'Old size ({}) > new size ({}).'
               .format(old_size, new_size))
         sys.exit(1)
 
-    # Stop the instance
-    ec2_status = aws.ec2stop(instance_id)
+    try:
+        aws.modvol(old_vol_id, new_size, vol_type, iops)
+        print('Task completed!')
+        sys.exit(0)
+    except ClientError as e:
+        if re.search('You\'ve reached the maximum modification ' +
+                     'rate per volume limit.', str(e)):
+            print(e)
+            sys.exit(1)
+        elif re.search('Modification is not supported for volume', str(e)):
+            print(e)
 
-    # Create snapshot
-    snap_id = aws.mksnap(old_vol_id, instance_id)
+            while True:
+                try:
+                    choice = str(input('Do you want to proceed? [Y/N] ')
+                                 .lower())
+                except KeyboardInterrupt:
+                    print('\nGoodbye!')
+                    sys.exit(1)
+                else:
+                    if choice == 'y':
+                        # Stop the instance
+                        ec2_status = aws.ec2stop(instance_id)
 
-    # Create new volume
-    new_vol_id = aws.mkvol(snap_id, az, vol_type, iops, instance_id, new_size)
+                        # Create snapshot
+                        snap_id = aws.mksnap(old_vol_id, instance_id)
 
-    # Detach old volume
-    aws.detachvol(old_vol_id, root_device, instance_id)
+                        # Create new volume
+                        new_vol_id = aws.mkvol(snap_id, az, vol_type, iops,
+                                               instance_id, new_size)
 
-    # Attach new volume
-    aws.attachvol(new_vol_id, root_device, instance_id)
+                        # Detach old volume
+                        aws.detachvol(old_vol_id, root_device, instance_id)
 
-    # Enable DeleteOnTermination
-    aws.modifyec2(root_device, new_vol_id, instance_id)
+                        # Attach new volume
+                        aws.attachvol(new_vol_id, root_device, instance_id)
 
-    # Start instance
-    aws.ec2start(instance_id)
+                        # Enable DeleteOnTermination
+                        aws.modifyec2(root_device, new_vol_id, instance_id)
 
-    # Perform cleanup (optional)
-    aws.cleanup(old_vol_id, snap_id)
+                        # Start instance
+                        aws.ec2start(instance_id)
 
-    print('Task completed!')
+                        # Perform cleanup (optional)
+                        aws.cleanup(old_vol_id, snap_id)
+
+                        print('Task completed!')
+                        sys.exit(0)
+                    elif choice == 'n':
+                        print('Goodbye!')
+                        sys.exit(1)
+                    else:
+                        print('Please choose between Y and N.')
 
 
 if __name__ == '__main__':
