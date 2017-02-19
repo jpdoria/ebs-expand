@@ -6,7 +6,7 @@ with open('requirements.txt') as file_requirements:
 
 setup(
     name='ebs_expand',
-    version='1.0.0',
+    version='1.1.0',
     author='John Paul P. Doria',
     author_email='jp@lazyadm.in',
     description=('Expand root volume of EBS-backed Linux EC2.'),

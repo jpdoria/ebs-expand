@@ -30,7 +30,7 @@ def set_args():
         '--version',
         help='Display current version of ebs_expand',
         action='version',
-        version='%(prog)s (v1.0)'
+        version='%(prog)s (v1.1)'
     )
 
     return ap
