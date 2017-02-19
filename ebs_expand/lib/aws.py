@@ -1,4 +1,6 @@
+import os
 import sys
+import time
 import boto3
 from datetime import datetime
 
@@ -32,12 +34,58 @@ class Aws:
 
         print('AvailabilityZone: {}'.format(az))
         print('VolumeId: {}'.format(old_vol_id))
-        print('Size: {} GiB'.format(old_size))
+        print('CurrentSize: {} GiB'.format(old_size))
         print('VolumeType: {}'.format(vol_type))
         print('Iops: {}'.format(iops))
         print('RootDevice: {}'.format(root_device))
 
         return az, old_vol_id, old_size, vol_type, iops, root_device
+
+    def waiter(self, seconds, mod_status, vol_id, mod_progress):
+        while seconds != 0:
+            time.sleep(1)
+            os.system('clear')
+            seconds -= 1
+            print('{0} {1}...'.format(mod_status.capitalize(),
+                  vol_id))
+            print('Progress: {}%'.format(mod_progress))
+            print('\nThe script will check again in {} second(s).'
+                  .format(seconds))
+
+    def modvol(self, vol_id, new_size, vol_type, iops):
+        print('Modifying {}...'.format(vol_id))
+
+        if vol_type == 'io1':
+            self.ec2.modify_volume(
+                VolumeId=vol_id,
+                Size=new_size,
+                VolumeType=vol_type,
+                Iops=iops
+            )
+        else:
+            self.ec2.modify_volume(
+                VolumeId=vol_id,
+                Size=new_size,
+                VolumeType=vol_type
+            )
+
+        while True:
+            dvm_resp = self.ec2.describe_volumes_modifications(
+                VolumeIds=[
+                    vol_id
+                ]
+            )
+            mod_status = dvm_resp['VolumesModifications'][0][
+                                  'ModificationState']
+            mod_progress = dvm_resp['VolumesModifications'][0]['Progress']
+
+            if mod_status == 'completed':
+                os.system('clear')
+                print('ModificationState: {}'.format(mod_status))
+                print('Progress: {}%'.format(mod_progress))
+                break
+            else:
+                self.waiter(60, mod_status, vol_id, mod_progress)
 
     def ec2stop(self, instance_id):
         print('Stopping {}...'.format(instance_id))
@@ -309,9 +357,6 @@ class Aws:
                     ).lower())
             except KeyboardInterrupt:
                 print('\nGoodbye!')
-                sys.exit(1)
-            except ValueError as e:
-                print('Please choose between Y and N.')
                 sys.exit(1)
             else:
                 if choice == 'y':
